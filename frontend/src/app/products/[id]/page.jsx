@@ -2,12 +2,28 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, Package, MapPin, Calendar, Thermometer, Shield, Download, Plus } from 'lucide-react';
+import {
+  ArrowLeft,
+  Package,
+  MapPin,
+  Calendar,
+  Thermometer,
+  Shield,
+  Download,
+  Plus,
+} from 'lucide-react';
 import Link from 'next/link';
 import { productsAPI, checkpointsAPI } from '@/services/api';
-import { LoadingSpinner, StatusBadge, Button, ErrorMessage, Card } from '@/components/common';
+import {
+  LoadingSpinner,
+  StatusBadge,
+  Button,
+  ErrorMessage,
+  Card,
+} from '@/components/common';
 import { formatDate, formatTemperature } from '@/utils/formatters';
 import { useAuth } from '@/contexts/AuthContext';
+import Image from 'next/image';
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -17,7 +33,7 @@ export default function ProductDetailPage() {
 
   // Fetch product details
   const {
-    data: product,
+    data: { data: { product } = {} } = {},
     isLoading: productLoading,
     error: productError,
   } = useQuery({
@@ -25,6 +41,8 @@ export default function ProductDetailPage() {
     queryFn: () => productsAPI.getById(productId),
     enabled: !!productId,
   });
+
+  console.log('Product details:', product);
 
   // Fetch checkpoints
   const {
@@ -50,7 +68,9 @@ export default function ProductDetailPage() {
       <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white">
         <div className="max-w-4xl mx-auto px-4 py-24">
           <ErrorMessage
-            message={productError.response?.data?.message || 'Failed to load product'}
+            message={
+              productError.response?.data?.message || 'Failed to load product'
+            }
             onRetry={() => router.push('/dashboard')}
           />
         </div>
@@ -72,7 +92,10 @@ export default function ProductDetailPage() {
             </Link>
 
             <div className="flex items-center gap-4">
-              <Link href="/dashboard" className="flex items-center gap-2 text-slate-300 hover:text-white transition">
+              <Link
+                href="/dashboard"
+                className="flex items-center gap-2 text-slate-300 hover:text-white transition"
+              >
                 <ArrowLeft className="w-4 h-4" />
                 Back to Dashboard
               </Link>
@@ -89,10 +112,14 @@ export default function ProductDetailPage() {
             <div className="flex items-start justify-between mb-6">
               <div className="flex-1">
                 <div className="flex items-center gap-4 mb-2">
-                  <h1 className="text-3xl md:text-4xl font-bold">{product.name}</h1>
+                  <h1 className="text-3xl md:text-4xl font-bold">
+                    {product.name}
+                  </h1>
                   <StatusBadge status={product.status} />
                 </div>
-                <p className="text-slate-400 font-mono text-sm">{product.productId}</p>
+                <p className="text-slate-400 font-mono text-sm">
+                  {product.productId}
+                </p>
               </div>
 
               <Button variant="outline" onClick={() => window.print()}>
@@ -108,13 +135,19 @@ export default function ProductDetailPage() {
                 <p className="font-semibold">{product.category}</p>
               </div>
               <div>
-                <p className="text-sm text-slate-400 mb-1">Manufacturing Date</p>
-                <p className="font-semibold">{formatDate(product.manufacturingDate)}</p>
+                <p className="text-sm text-slate-400 mb-1">
+                  Manufacturing Date
+                </p>
+                <p className="font-semibold">
+                  {formatDate(product.manufacturingDate)}
+                </p>
               </div>
               {product.expiryDate && (
                 <div>
                   <p className="text-sm text-slate-400 mb-1">Expiry Date</p>
-                  <p className="font-semibold">{formatDate(product.expiryDate)}</p>
+                  <p className="font-semibold">
+                    {formatDate(product.expiryDate)}
+                  </p>
                 </div>
               )}
               <div>
@@ -123,15 +156,20 @@ export default function ProductDetailPage() {
               </div>
               {product.currentLocation && (
                 <div>
-                  <p className="text-sm text-slate-400 mb-1">Current Location</p>
+                  <p className="text-sm text-slate-400 mb-1">
+                    Current Location
+                  </p>
                   <p className="font-semibold">{product.currentLocation}</p>
                 </div>
               )}
               {(product.minTemperature || product.maxTemperature) && (
                 <div>
-                  <p className="text-sm text-slate-400 mb-1">Temperature Range</p>
+                  <p className="text-sm text-slate-400 mb-1">
+                    Temperature Range
+                  </p>
                   <p className="font-semibold">
-                    {formatTemperature(product.minTemperature)} - {formatTemperature(product.maxTemperature)}
+                    {formatTemperature(product.minTemperature)} -{' '}
+                    {formatTemperature(product.maxTemperature)}
                   </p>
                 </div>
               )}
@@ -148,8 +186,12 @@ export default function ProductDetailPage() {
             {/* Blockchain Info */}
             {product.blockchainHash && (
               <div className="mt-6 pt-6 border-t border-slate-700">
-                <p className="text-sm text-slate-400 mb-2">Blockchain Transaction</p>
-                <p className="font-mono text-xs text-blue-400 break-all">{product.blockchainHash}</p>
+                <p className="text-sm text-slate-400 mb-2">
+                  Blockchain Transaction
+                </p>
+                <p className="font-mono text-xs text-blue-400 break-all">
+                  {product.blockchainHash}
+                </p>
               </div>
             )}
           </div>
@@ -200,7 +242,9 @@ export default function ProductDetailPage() {
                         <div className="flex-1">
                           <div className="flex items-start justify-between mb-2">
                             <div>
-                              <h3 className="font-semibold text-lg">{checkpoint.location}</h3>
+                              <h3 className="font-semibold text-lg">
+                                {checkpoint.location}
+                              </h3>
                               <p className="text-sm text-slate-400">
                                 {formatDate(checkpoint.timestamp)}
                               </p>
@@ -221,7 +265,8 @@ export default function ProductDetailPage() {
                               <div className="flex items-center gap-2 text-sm">
                                 <MapPin className="w-4 h-4 text-blue-400" />
                                 <span className="text-slate-400 font-mono text-xs">
-                                  {checkpoint.latitude.toFixed(4)}, {checkpoint.longitude.toFixed(4)}
+                                  {checkpoint.latitude.toFixed(4)},{' '}
+                                  {checkpoint.longitude.toFixed(4)}
                                 </span>
                               </div>
                             )}
@@ -253,7 +298,16 @@ export default function ProductDetailPage() {
                 <h3 className="text-lg font-semibold mb-4">Product QR Code</h3>
                 <div className="bg-white p-4 rounded-lg mb-4">
                   <div className="w-full aspect-square bg-slate-200 flex items-center justify-center text-slate-400">
-                    QR Code Placeholder
+                      {/* qrCode: 
+      'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANQAAADUCAYAAADk3g0YAAAAAklEQVR4AewaftIAAAqHSURBVO3BQW4AR5LAQLKh/3+Z62OeCmh0SWNjM8L+wVrrioe11jUPa61rHtZa1zysta55WGtd87DWuuZhrXXNw1rrmoe11jUPa61rHtZa1zysta55WGtd87DWuuZhrXXNDx+p/KWKSeWkYlL5omJSmSr+l1SmihOVNyomlaniDZWpYlL5SxVfPKy1rnlYa13zsNa65ofLKm5S+U0VJypvqEwVX6hMFTdV3KQyVUwqU8UbFTep3PSw1rrmYa11zcNa65offpnKGxVvVEwqk8oXFZPKScWJylQxqZyoTBV/SeXfROWNit/0sNa65mGtdc3DWuuaH/7jVE4qJpVJZap4o2JSOamYVN6omFTeUJkqJpWpYqq4SWWq+C97WGtd87DWuuZhrXXND/9xFZPKScUbKlPFpDJV/CaVk4pJZaqYVKaKN1Smiknl/5OHtdY1D2utax7WWtf88Msq/lLFFypTxUnFpPJFxRsqJxVvqNxU8Zsq/k0e1lrXPKy1rnlYa13zw2Uqf0llqphUpopJZaqYVKaKSWWqmFSmiknlRGWqeENlqjipmFSmiknlRGWqmFSmihOVf7OHtdY1D2utax7WWtf88FHFv4nKTRVvqNxU8ZdUpoqTikllqvii4r/kYa11zcNa65qHtdY1P3ykMlVMKicVk8obFZPKicpUcaIyVfwmlS9UvqiYVE4qpopJZap4Q2WqOFGZKiaVk4ovHtZa1zysta55WGtd88NlKicVk8pJxaQyqUwVX6hMFZPKVHGi8kXFpHJS8YXKScUbFZPKicpUcaIyVUwqU8WkctPDWuuah7XWNQ9rrWt++GUVJxUnKlPFGypTxRsqJyonFZPKScWkclLxRcWJyqQyVdxUcaLyb/aw1rrmYa11zcNa65ofPqqYVCaVqeKNiptU3qg4UZkqJpWTiptUpooTlaliqphUJpWpYlKZKk5UpoqTikllqvhLD2utax7WWtc8rLWu+eGyiptUTiomlaniDZUvVH5TxaQyVUwqU8UbKicVJxVvVEwqb1T8Lz2sta55WGtd87DWuuaHj1ROKiaVNypOVN5QOan4ouINlTdUfpPKVDGpTConFTdVTCpTxaTylx7WWtc8rLWueVhrXfPDRxUnKicVJypTxUnFScWk8obKFypTxV9SmSomlTcq3lCZKiaVNyreqJhUbnpYa13zsNa65mGtdY39gw9UpooTlaliUpkq3lCZKt5Q+aJiUnmjYlKZKiaVk4oTlTcqJpUvKt5Q+aLiNz2sta55WGtd87DWuuaHjypOVKaKSeVEZaqYVE5UpopJZaqYVKaKSeWk4kTlpGJSmSpOVE4qJpWbKk5UTipOKk5UJpWp4qaHtdY1D2utax7WWtfYP7hIZaq4SWWqOFGZKk5UpopJZap4Q2WqmFSmihOVqeJE5aTiROWmijdU3qiYVE4qvnhYa13zsNa65mGtdc0PH6lMFZPKVPGGyonKScUbFZPKVDGpTBVvqEwVJypvqEwVX1RMKjepvFFxonJScdPDWuuah7XWNQ9rrWt++Jer+E0qN6l8oTJVnFRMKlPFpHJS8UbFGyonFZPKVDGpTBVTxaQyqUwVXzysta55WGtd87DWuuaHjyomlROVv1TxRcUbFW+onKicqJyo3KQyVZyoTBWTyhsqN1Xc9LDWuuZhrXXNw1rrmh8+UjmpmFROKt5QmSomlTcqJpWp4g2VqeKk4g2VNypOVE4qTlSmijcq3lA5UZkqJpWp4ouHtdY1D2utax7WWtf88C+nMlWcqEwVk8qJyonKVDGpTBWTyhsqU8VJxaQyqUwVU8WkMqlMFVPFicobKlPFicqJym96WGtd87DWuuZhrXXND/9yFW9UTCpTxYnKVDGp/KWKv6QyVUwqk8pUcVIxqZxUfFHxlx7WWtc8rLWueVhrXfPDRxWTyknFpDKp/CWVqeKkYlKZKiaVN1RuqphUTiomlaniC5UTlf+yh7XWNQ9rrWse1lrX2D/4QOWk4g2VqeINlaniROWmihOVk4pJ5aTiRGWqmFSmii9UpooTlaniC5U3Km56WGtd87DWuuZhrXXNDx9VTCqTylTxhspUMancVDGpnFRMKlPFScVJxYnKb1I5qZgqfpPKGxV/6WGtdc3DWuuah7XWNT98pHJSMamcVHxRcaIyVfyXqJxUTCqTylTxRsWkMlVMKicVk8pJxYnKpDJV/KaHtdY1D2utax7WWtf88FHFFxWTyknFVHGiMlVMKm9UTCpvVEwqJxVfVHxRMancpPKFyr/Jw1rrmoe11jUPa61rfrhM5Q2Vk4pJZao4qZhUpopJ5YuKSeUvqUwVJypTxRcqJxWTyknFpPJGxV96WGtd87DWuuZhrXXND5dVnKi8oTJVTConFVPFpHKTyhsVk8qkMlVMKlPFpPKGyhsVJyr/SypTxW96WGtd87DWuuZhrXXNDx+pTBWTyknFpDJVTCpTxYnKVHFScaIyVZyovFExqdxUMalMFZPKGyq/qeImlanii4e11jUPa61rHtZa1/zwyyomlTdUTlSmiqnipGJS+ULlpOIvVUwqJypTxaRyUvFGxYnKVDGpTBWTylTxmx7WWtc8rLWueVhrXfPDZSpTxVTxRsUbKicVX1RMKm+oTBWTyonKVDGpTBVTxRsqU8WkMlWcqJxUTBWTylTxb/Kw1rrmYa11zcNa65ofPqr4QmWqmFSmijcqJpWTiknlpOILlaniDZWp4kTlpOImlZOKE5WpYlKZKqaKSeU3Pay1rnlYa13zsNa6xv7BRSpfVJyoTBWTyhsVb6hMFZPKVPGGyhsVk8pU8YbKVPGGyv9SxaQyVfymh7XWNQ9rrWse1lrX/PCRylRxovKGyhsVJyonKlPFFypTxaTyhcpvUpkqTireUPlLKicVXzysta55WGtd87DWuuaHjyreqHij4kRlqphUpopJ5Y2K31TxhspUMalMFZPKVPGGyknFGxVvqEwqU8VfelhrXfOw1rrmYa11zQ8fqfylipsqTlTeqLhJZap4o+INlTcqTlSmijdUpoqTiv+lh7XWNQ9rrWse1lrX/HBZxU0qb6icqEwVk8pUMalMFZPKVDGpvFHxlyreUJkqpopJ5Y2KN1ROKiaVqeKLh7XWNQ9rrWse1lrX/PDLVN6oeKNiUpkqJpUvKiaVqeKkYlKZVP5Sxb+JyhcVk8qk8pse1lrXPKy1rnlYa13zw3+cyonKGxWTyhsqU8WkclIxqZxUvKHyRsUXKlPFb1I5qfhND2utax7WWtc8rLWu+eH/mYoTlTcqTlSmiknlpGJSeUPlpOINlaliUjlROan4ouJEZaq46WGtdc3DWuuah7XWNT/8sorfVPGGylRxUvGbKiaVqWKq+KJiUjmpmCreqJhUpopJ5aRiUpkqTiomlanii4e11jUPa61rHtZa19g/+EDlL1VMKlPFpPJGxaQyVUwqU8WkclIxqbxRMam8UTGpnFScqJxUvKHyRsWkMlX8poe11jUPa61rHtZa19g/WGtd8bDWuuZhrXXNw1rrmoe11jUPa61rHtZa1zysta55WGtd87DWuuZhrXXNw1rrmoe11jUPa61rHtZa1zysta75P2TTnQA7plKeAAAAAElFTkSuQmCC',
+    */}
+                    <Image
+                      src={product.qrCode}
+
+                      alt="QR Code"
+                      width={400}
+                      height={400}
+                    />
                   </div>
                 </div>
                 <Button variant="outline" className="w-full">
@@ -267,21 +321,30 @@ export default function ProductDetailPage() {
                 <h3 className="text-lg font-semibold mb-4">Statistics</h3>
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-slate-400">Total Checkpoints</span>
-                    <span className="font-semibold">{checkpoints?.length || 0}</span>
+                    <span className="text-sm text-slate-400">
+                      Total Checkpoints
+                    </span>
+                    <span className="font-semibold">
+                      {checkpoints?.length || 0}
+                    </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-slate-400">Days in Transit</span>
+                    <span className="text-sm text-slate-400">
+                      Days in Transit
+                    </span>
                     <span className="font-semibold">
                       {product.createdAt
                         ? Math.floor(
-                            (new Date() - new Date(product.createdAt)) / (1000 * 60 * 60 * 24)
+                            (new Date() - new Date(product.createdAt)) /
+                              (1000 * 60 * 60 * 24),
                           )
                         : 0}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-slate-400">Temperature Alerts</span>
+                    <span className="text-sm text-slate-400">
+                      Temperature Alerts
+                    </span>
                     <span className="font-semibold text-green-400">0</span>
                   </div>
                 </div>

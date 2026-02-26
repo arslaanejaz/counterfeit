@@ -66,7 +66,7 @@ export default function ProductRegistrationForm() {
         maxTemperature: data.maxTemperature || null,
       };
 
-      const apiResponse = await productsAPI.register(productData);
+      const apiResponse = await productsAPI.create(productData);
 
       // Step 2: Register on blockchain (if Web3 is connected)
       if (account && registerProduct) {

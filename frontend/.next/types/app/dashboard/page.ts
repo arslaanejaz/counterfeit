@@ -1,4 +1,4 @@
-// File: /home/unorthod0xd/Documents/Nexus-Chain/frontend/src/app/dashboard/page.jsx
+// File: /Users/awais/projects/nestauth/Nexus-Chain/frontend/src/app/dashboard/page.jsx
 import * as entry from '../../../../src/app/dashboard/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
