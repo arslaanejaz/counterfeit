@@ -1,7 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { QrCode, Search, Package, ArrowLeft, Shield, CheckCircle2, XCircle } from 'lucide-react';
+import {
+  QrCode,
+  Search,
+  Package,
+  ArrowLeft,
+  Shield,
+  CheckCircle2,
+  XCircle,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { productsAPI } from '@/services/api';
@@ -22,7 +30,7 @@ export default function VerifyProductPage() {
       setError(null);
 
       // Try to verify by product ID
-      const product = await productsAPI.verifyByProductId(productId);
+      const product = await productsAPI.verify(productId);
 
       if (product) {
         setVerificationResult({
@@ -49,7 +57,9 @@ export default function VerifyProductPage() {
 
   const handleScanQR = () => {
     // This would open QR scanner in a real implementation
-    alert('QR Scanner would open here. Camera integration with @zxing/browser library will be added.');
+    alert(
+      'QR Scanner would open here. Camera integration with @zxing/browser library will be added.',
+    );
   };
 
   return (
@@ -65,7 +75,10 @@ export default function VerifyProductPage() {
               <span className="text-xl font-bold">NexusChain</span>
             </Link>
 
-            <Link href="/" className="flex items-center gap-2 text-slate-300 hover:text-white transition">
+            <Link
+              href="/"
+              className="flex items-center gap-2 text-slate-300 hover:text-white transition"
+            >
               <ArrowLeft className="w-4 h-4" />
               Back to Home
             </Link>
@@ -122,7 +135,9 @@ export default function VerifyProductPage() {
                   <div className="w-full border-t border-slate-700"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-4 bg-slate-800/50 text-slate-400">OR</span>
+                  <span className="px-4 bg-slate-800/50 text-slate-400">
+                    OR
+                  </span>
                 </div>
               </div>
 
@@ -139,11 +154,13 @@ export default function VerifyProductPage() {
 
           {/* Verification Result */}
           {verificationResult && (
-            <div className={`border rounded-xl p-8 ${
-              verificationResult.verified
-                ? 'bg-green-500/10 border-green-500/30'
-                : 'bg-red-500/10 border-red-500/30'
-            }`}>
+            <div
+              className={`border rounded-xl p-8 ${
+                verificationResult.verified
+                  ? 'bg-green-500/10 border-green-500/30'
+                  : 'bg-red-500/10 border-red-500/30'
+              }`}
+            >
               <div className="flex items-start gap-4 mb-6">
                 {verificationResult.verified ? (
                   <div className="flex-shrink-0 w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center">
@@ -155,10 +172,16 @@ export default function VerifyProductPage() {
                   </div>
                 )}
                 <div className="flex-1">
-                  <h2 className={`text-2xl font-bold mb-2 ${
-                    verificationResult.verified ? 'text-green-400' : 'text-red-400'
-                  }`}>
-                    {verificationResult.verified ? 'Product Verified ✓' : 'Product Not Found ✗'}
+                  <h2
+                    className={`text-2xl font-bold mb-2 ${
+                      verificationResult.verified
+                        ? 'text-green-400'
+                        : 'text-red-400'
+                    }`}
+                  >
+                    {verificationResult.verified
+                      ? 'Product Verified ✓'
+                      : 'Product Not Found ✗'}
                   </h2>
                   <p className="text-slate-300">
                     {verificationResult.verified
@@ -172,38 +195,64 @@ export default function VerifyProductPage() {
                 <div className="space-y-4 border-t border-slate-700 pt-6">
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <p className="text-sm text-slate-400 mb-1">Product Name</p>
-                      <p className="font-semibold">{verificationResult.product.name}</p>
+                      <p className="text-sm text-slate-400 mb-1">
+                        Product Name
+                      </p>
+                      <p className="font-semibold">
+                        {verificationResult.product.name}
+                      </p>
                     </div>
                     <div>
                       <p className="text-sm text-slate-400 mb-1">Product ID</p>
-                      <p className="font-semibold font-mono text-sm">{verificationResult.product.id}</p>
+                      <p className="font-semibold font-mono text-sm">
+                        {verificationResult.product.id}
+                      </p>
                     </div>
                     <div>
-                      <p className="text-sm text-slate-400 mb-1">Manufacturer</p>
-                      <p className="font-semibold">{verificationResult.product.manufacturer}</p>
+                      <p className="text-sm text-slate-400 mb-1">
+                        Manufacturer
+                      </p>
+                      <p className="font-semibold">
+                        {verificationResult.product.manufacturer}
+                      </p>
                     </div>
                     <div>
                       <p className="text-sm text-slate-400 mb-1">Category</p>
-                      <p className="font-semibold">{verificationResult.product.category}</p>
+                      <p className="font-semibold">
+                        {verificationResult.product.category}
+                      </p>
                     </div>
                     <div>
-                      <p className="text-sm text-slate-400 mb-1">Current Status</p>
+                      <p className="text-sm text-slate-400 mb-1">
+                        Current Status
+                      </p>
                       <div className="inline-flex px-3 py-1 rounded-full bg-blue-500/20 border border-blue-500/30 text-blue-400 text-sm font-semibold">
                         {verificationResult.product.status}
                       </div>
                     </div>
                     <div>
-                      <p className="text-sm text-slate-400 mb-1">Manufacturing Date</p>
-                      <p className="font-semibold">{verificationResult.product.manufacturingDate}</p>
+                      <p className="text-sm text-slate-400 mb-1">
+                        Manufacturing Date
+                      </p>
+                      <p className="font-semibold">
+                        {verificationResult.product.manufacturingDate}
+                      </p>
                     </div>
                     <div>
-                      <p className="text-sm text-slate-400 mb-1">Checkpoints Recorded</p>
-                      <p className="font-semibold">{verificationResult.product.checkpoints}</p>
+                      <p className="text-sm text-slate-400 mb-1">
+                        Checkpoints Recorded
+                      </p>
+                      <p className="font-semibold">
+                        {verificationResult.product.checkpoints}
+                      </p>
                     </div>
                     <div>
-                      <p className="text-sm text-slate-400 mb-1">Current Location</p>
-                      <p className="font-semibold">{verificationResult.product.currentLocation}</p>
+                      <p className="text-sm text-slate-400 mb-1">
+                        Current Location
+                      </p>
+                      <p className="font-semibold">
+                        {verificationResult.product.currentLocation}
+                      </p>
                     </div>
                   </div>
 
@@ -211,7 +260,11 @@ export default function VerifyProductPage() {
                     <Button
                       variant="primary"
                       className="w-full"
-                      onClick={() => router.push(`/products/${verificationResult.product.id}`)}
+                      onClick={() =>
+                        router.push(
+                          `/products/${verificationResult.product.id}`,
+                        )
+                      }
                     >
                       <Package className="w-5 h-5 mr-2" />
                       View Complete Product Journey
@@ -224,12 +277,24 @@ export default function VerifyProductPage() {
 
           {/* Info Box */}
           <div className="mt-8 p-6 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-            <h3 className="font-semibold text-blue-400 mb-2">How does verification work?</h3>
+            <h3 className="font-semibold text-blue-400 mb-2">
+              How does verification work?
+            </h3>
             <ul className="space-y-2 text-sm text-slate-300">
-              <li>✓ Each authentic product has a unique QR code linked to blockchain</li>
-              <li>✓ Verification happens instantly by checking blockchain records</li>
-              <li>✓ You can see the complete journey from manufacturer to current location</li>
-              <li>✓ Counterfeit products will not have valid blockchain records</li>
+              <li>
+                ✓ Each authentic product has a unique QR code linked to
+                blockchain
+              </li>
+              <li>
+                ✓ Verification happens instantly by checking blockchain records
+              </li>
+              <li>
+                ✓ You can see the complete journey from manufacturer to current
+                location
+              </li>
+              <li>
+                ✓ Counterfeit products will not have valid blockchain records
+              </li>
             </ul>
           </div>
         </div>

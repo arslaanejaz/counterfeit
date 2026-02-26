@@ -46,12 +46,12 @@ export default function ProductDetailPage() {
 
   // Fetch checkpoints
   const {
-    data: checkpoints,
+    data: { data: { checkpoints } = {} } = {},
     isLoading: checkpointsLoading,
     error: checkpointsError,
   } = useQuery({
     queryKey: ['checkpoints', productId],
-    queryFn: () => checkpointsAPI.getByProductId(productId),
+    queryFn: () => checkpointsAPI.getByProduct(productId),
     enabled: !!productId,
   });
 
@@ -298,12 +298,11 @@ export default function ProductDetailPage() {
                 <h3 className="text-lg font-semibold mb-4">Product QR Code</h3>
                 <div className="bg-white p-4 rounded-lg mb-4">
                   <div className="w-full aspect-square bg-slate-200 flex items-center justify-center text-slate-400">
-                      {/* qrCode: 
+                    {/* qrCode: 
       'data:image/png;base64,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',
     */}
                     <Image
                       src={product.qrCode}
-
                       alt="QR Code"
                       width={400}
                       height={400}

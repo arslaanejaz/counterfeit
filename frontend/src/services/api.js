@@ -10,18 +10,19 @@ import { STORAGE_KEYS, ERROR_MESSAGES } from '@/utils/constants';
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
   headers: {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
   },
-  timeout: 30000 // 30 seconds
+  timeout: 30000, // 30 seconds
 });
 
 // Request interceptor - Add JWT token to requests
 api.interceptors.request.use(
   (config) => {
     // Get token from localStorage
-    const token = typeof window !== 'undefined'
-      ? localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN)
-      : null;
+    const token =
+      typeof window !== 'undefined'
+        ? localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN)
+        : null;
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -31,7 +32,7 @@ api.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // Response interceptor - Handle errors globally
@@ -73,7 +74,7 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 // ============================================
@@ -87,23 +88,20 @@ export const authAPI = {
    * @param {string} password
    * @returns {Promise<{token: string, user: Object}>}
    */
-  login: (email, password) =>
-    api.post('/api/auth/login', { email, password }),
+  login: (email, password) => api.post('/api/auth/login', { email, password }),
 
   /**
    * Register new user
    * @param {Object} userData - {email, password, name, role, walletAddress?}
    * @returns {Promise<{token: string, user: Object}>}
    */
-  register: (userData) =>
-    api.post('/api/auth/register', userData),
+  register: (userData) => api.post('/api/auth/register', userData),
 
   /**
    * Get current user profile
    * @returns {Promise<{user: Object}>}
    */
-  me: () =>
-    api.get('/api/auth/me'),
+  me: () => api.get('/api/auth/me'),
 
   /**
    * Logout (client-side only)
@@ -113,7 +111,7 @@ export const authAPI = {
       localStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
       localStorage.removeItem(STORAGE_KEYS.USER_DATA);
     }
-  }
+  },
 };
 
 // ============================================
@@ -126,32 +124,28 @@ export const productsAPI = {
    * @param {Object} productData - {name, batchNumber, manufacturerDate?}
    * @returns {Promise<{product: Object}>}
    */
-  create: (productData) =>
-    api.post('/api/products', productData),
+  create: (productData) => api.post('/api/products', productData),
 
   /**
    * Get all products with optional filters
    * @param {Object} filters - {status?, search?, page?, limit?}
    * @returns {Promise<{products: Array, total: number}>}
    */
-  getAll: (filters = {}) =>
-    api.get('/api/products', { params: filters }),
+  getAll: (filters = {}) => api.get('/api/products', { params: filters }),
 
   /**
    * Get product by ID
    * @param {string} id - Product ID
    * @returns {Promise<{product: Object}>}
    */
-  getById: (id) =>
-    api.get(`/api/products/${id}`),
+  getById: (id) => api.get(`/api/products/${id}`),
 
   /**
    * Verify product by QR code
    * @param {string} qrCode - QR code (format: NEXUS-{id})
    * @returns {Promise<{product: Object, isAuthentic: boolean}>}
    */
-  verify: (qrCode) =>
-    api.get(`/api/verify/${qrCode}`),
+  verify: (qrCode) => api.get(`/api/products/verify/${qrCode}`),
 
   /**
    * Get product by blockchain ID
@@ -159,7 +153,7 @@ export const productsAPI = {
    * @returns {Promise<{product: Object}>}
    */
   getByBlockchainId: (blockchainId) =>
-    api.get(`/api/products/blockchain/${blockchainId}`)
+    api.get(`/api/products/blockchain/${blockchainId}`),
 };
 
 // ============================================
@@ -172,16 +166,14 @@ export const checkpointsAPI = {
    * @param {Object} checkpointData - {productId, location, latitude?, longitude?, status, temperature, notes?}
    * @returns {Promise<{checkpoint: Object}>}
    */
-  create: (checkpointData) =>
-    api.post('/api/checkpoints', checkpointData),
+  create: (checkpointData) => api.post('/api/checkpoints', checkpointData),
 
   /**
    * Get checkpoints for a product
    * @param {string} productId - Product ID
    * @returns {Promise<{checkpoints: Array}>}
    */
-  getByProduct: (productId) =>
-    api.get(`/api/products/${productId}/checkpoints`),
+  getByProduct: (productId) => api.get(`/api/checkpoints/product/${productId}`),
 
   /**
    * Update checkpoint
@@ -190,7 +182,7 @@ export const checkpointsAPI = {
    * @returns {Promise<{checkpoint: Object}>}
    */
   update: (checkpointId, updateData) =>
-    api.patch(`/api/checkpoints/${checkpointId}`, updateData)
+    api.patch(`/api/checkpoints/${checkpointId}`, updateData),
 };
 
 // ============================================
@@ -203,8 +195,7 @@ export const userAPI = {
    * @param {string} userId - User ID
    * @returns {Promise<{user: Object}>}
    */
-  getProfile: (userId) =>
-    api.get(`/api/users/${userId}`),
+  getProfile: (userId) => api.get(`/api/users/${userId}`),
 
   /**
    * Update user profile
@@ -221,7 +212,7 @@ export const userAPI = {
    * @returns {Promise<{user: Object}>}
    */
   updateWallet: (walletAddress) =>
-    api.patch('/api/users/wallet', { walletAddress })
+    api.patch('/api/users/wallet', { walletAddress }),
 };
 
 export default api;
